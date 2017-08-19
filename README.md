@@ -95,9 +95,9 @@ android:progressDrawable="@drawable/bg_forgotpassword_seekbar"
 
 #### 明明已经完成了滑动的效果，为什么需要自定义seekbar
 
->> 你以为这样就完啦？那你太天真了，你会发现如果你按上面的步骤做，最后会有一个很蛋疼的效果：
+    你以为这样就完啦？那你太天真了，你会发现如果你按上面的步骤做，最后会有一个很蛋疼的效果：
 你不滑动滑块，只点击滑动条中间，滑块会马上到中间。
->> 也就是说我们想做的效果是只滑动而不能点击，仅仅做成这样是没办法实现这个需求。
+    也就是说我们想做的效果是只滑动而不能点击，仅仅做成这样是没办法实现这个需求。
 那怎么办？我在网上找了很多文章，大多都是不能滑也不能点，而我要的是能滑不能点。难道SeekBar没戏啦？我想了想，最后我用事件分发来解决。
 
 #### VerificationSeekBar 
@@ -143,8 +143,6 @@ sbProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 既然是事件分发，我这里也不想写事件分发的内容，以后我们写一篇专门关于事件分发的文章，这里如果有小伙伴不了解事件分发的话，自己先去google一下。
 既然是事件分发，那我们就需要自定义seekbar啦，其实很简单。我先贴代码，然后再讲解。
 
-#####（1）代码君：
-
 ```
 public class VerificationSeekBar extends SeekBar{
     //这两个值为用算法使用的2空间复杂度
@@ -186,10 +184,10 @@ public class VerificationSeekBar extends SeekBar{
 
 #### dispatchTouchEvent中的算法
 
->> 为了方便讲解，我把其它的内容删掉，就留关键方法，没错，就是dispatchTouchEvent。但是如果我不说，可能dispatchTouchEvent里面的代码你会看得蒙。
->> 先说说我的思想：简单来说就是你点击的地方要在滑块的范围，才分发事件，不然retrun true不分发事件。所以有了x - index > 20，这里的index =
+    为了方便讲解，我把其它的内容删掉，就留关键方法，没错，就是dispatchTouchEvent。但是如果我不说，可能dispatchTouchEvent里面的代码你会看得蒙。
+    先说说我的思想：简单来说就是你点击的地方要在滑块的范围，才分发事件，不然retrun true不分发事件。所以有了x - index > 20，这里的index =
 150是我滑块的大概宽度，所以要你点击的地方在我滑块的宽度的20像素直接我才分发事件。所以x - index > 20的话不分发。
->> int x = (int) event.getX(); 获取点击时的坐标，注意，是相对于view左上角的，而不是相对屏幕的。
+    int x = (int) event.getX(); 获取点击时的坐标，注意，是相对于view左上角的，而不是相对屏幕的。
 我这里分别按顺序判断了event.getAction() == MotionEvent.ACTION_DOWN和event.getAction() == MotionEvent.ACTION_MOVE，注意，是按顺序。为什么要按顺序呢？首先你自己测试你会发现，点击seekbar时ACTION_DOWN和ACTION_MOVE都会执行，所以你不能光判定按下，还要判断滑动。那为什么不一起判断而要按顺序判定呢？因为一起判断的话你可以试试，你会发现根本就滑不了。
 而学过事件分发的都知道事件先执行ACTION_DOWN再执行ACTION_MOVE，所以先判断点击的地方是否在滑块+20像素的范围内，如果不在，定义一个布尔值k记录不在，然后执行 if (!k){return true;}
 
@@ -201,7 +199,7 @@ http://www.jianshu.com/p/777904acb056
 不足之处
 ---------
 
->> 该方法虽然能方便的解决滑动解锁的问题，但是也有不足之处，那就是这个做法对尺寸的要求非常的细致。
->> 比如maxHeight和minHeight两个属性，如果偏大或偏小都不能达到完美包裹滑块的视觉效果，再比如自定义中的允许点击有效的范围是150也是根据滑块的宽度来设置的。
+    该方法虽然能方便的解决滑动解锁的问题，但是也有不足之处，那就是这个做法对尺寸的要求非常的细致。
+    比如maxHeight和minHeight两个属性，如果偏大或偏小都不能达到完美包裹滑块的视觉效果，再比如自定义中的允许点击有效的范围是150也是根据滑块的宽度来设置的。
 
 
