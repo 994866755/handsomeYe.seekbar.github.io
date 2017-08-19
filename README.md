@@ -1,5 +1,2 @@
-# handsomeYe.seekbar.github.io
-自定义seekbar实现滑动解锁
-
-
-### test
+使用seekbar实现滑动验证条
+====
